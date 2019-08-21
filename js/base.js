@@ -10,6 +10,10 @@
     , $task_detail = $('.task-detail')
     , $task_detail_mask = $('.task-detail-mask')
     , task_list = []
+    , current_index
+    , $update_form
+    , $task_detail_content
+    , $task_detail_content_input
     ;
   
   init();
@@ -36,10 +40,18 @@
     })
   }
 
+  // 查看task详情
   function show_task_detail(index) {
     render_task_detail(index);
+    current_index = index;
     $task_detail.show();
     $task_detail_mask.show();
+  }
+
+  function update_task(index, data) {
+    if(index === undefined || !task_list[index]) return;
+    task_list[index] = data; // $.merge({}, task_list[index], data);
+    refresh_task_list();
   }
 
   function hide_task_detail() {
@@ -51,25 +63,49 @@
     if (index === undefined || !task_list[index]) return;
     var item = task_list[index]
     var tpl = `
-    <div>
+    <form>
       <div class="content">${item.content}</div>
+      <div class="input-item">
+        <input style="display: none;" type="text" name="content" value="${item.content}">
+      </div>
       <div>
-        <div class="desc">
-          <textarea value="${item.desc}"></textarea>
+        <div class="desc input-item">
+          <textarea name="desc">${item.desc || ''}</textarea>
         </div>
       </div>
-      <div class="remind">
-        <input type="date">
+      <div class="remind input-item">
+        <input name="remind_date" type="date" value="${item.remind_date || ''}">
       </div>
-    </div>
+      <div class="input-item">
+        <button type="submit">更新</button>
+      </div>
+    </form>
     `;
     $task_detail.html(null);
     $task_detail.html(tpl);
+    $update_form = $task_detail.find('form');
+    $task_detail_content = $update_form.find('.content')
+    $task_detail_content_input = $update_form.find('[name=content]');
+    $task_detail_content.on('dblclick', function() {
+      $task_detail_content_input.show();
+      $task_detail_content.hide();
+    })
+
+    $update_form.on('submit', function(e) {
+      e.preventDefault();
+      var data = {};
+      data.content = $(this).find('[name=content]').val();
+      data.desc = $(this).find('[name=desc]').val();
+      data.remind_date = $(this).find('[name=remind_date]').val();
+      // console.log(data)
+      update_task(index, data);
+      hide_task_detail();
+    })
   }
 
   function add_task(new_task) {
     // 将task推入task_list
-    task_list.push(new_task);
+    task_list.unshift(new_task);
     refresh_task_list();
     return true;
   }

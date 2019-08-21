@@ -26,10 +26,11 @@ h1 {
   float: right;
 }
 input,
-.task-item,
 button,
+textarea,
+.task-item,
 .task-detail-mask,
-textarea {
+.task-detail {
   padding: 10px;
   border-radius: 3px;
 }
@@ -71,9 +72,11 @@ input[type=date]:focus {
   width: 84%;
   margin-right: 1%;
 }
+[type=submit] {
+  background: #46b1e4;
+}
 .add-task [type=submit] {
   width: 15%;
-  background: #46b1e4;
 }
 .add-task [type=submit]:hover {
   background: #5fb9e4;
@@ -91,10 +94,12 @@ input[type=date]:focus {
 .task-item:hover {
   background: #ddd;
 }
-
+.task-detail,
+.task-detail-mask {
+  display: none;
+}
 .task-detail {
   position: absolute;
-  display: none;
   color: #333;
   background: #fff;
   width: 50%;
@@ -102,8 +107,11 @@ input[type=date]:focus {
   padding: 10px;
   bottom: 0;
   right: 0;
+  border-radius: 3px 0 0 3px;
+  -webkit-box-shadow: 0 1px 2px 1px rgba(0, 0, 0, .1);
+          box-shadow: 0 1px 2px 1px rgba(0, 0, 0, .1);
 }
-.task-detail > * {
+.task-detail .input-item {
   margin-bottom: 10px;
 }
 .task-detail .content {
@@ -113,12 +121,11 @@ input[type=date]:focus {
 }
 .task-detail-mask {
   position: fixed;
-  display: none;
   top: 0;
   right: 0;
   bottom: 0;
   left: 0;
-  background: rgba(30, 30, 30, .6)
+  background: rgba(30, 30, 30, .2);
 }
 .task-content {
   margin-left: 10px;
