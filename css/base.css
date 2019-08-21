@@ -91,11 +91,9 @@ input[type=date]:focus {
 .task-item:hover {
   background: #ddd;
 }
-.task-detail-mask,
+
 .task-detail {
   position: absolute;
-}
-.task-detail {
   display: none;
   color: #333;
   background: #fff;
@@ -114,6 +112,7 @@ input[type=date]:focus {
   cursor: pointer;
 }
 .task-detail-mask {
+  position: fixed;
   display: none;
   top: 0;
   right: 0;
