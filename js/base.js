@@ -22,15 +22,20 @@
   $task_detail_mask.on('click', hide_task_detail)
 
   function listen_task_delete() {
+    var index;
+    $('.task-item').on('dblclick', function() {
+      index = $(this).data('index')
+      show_task_detail(index)
+    })
     $task_delete_trigger.on('click', function() {
       var $this = $(this);
       var $item = $this.parent().parent();
-      var index = $item.data('index');
+      index = $item.data('index');
       var tmp = confirm('确定删除？');
       tmp ? delete_task(index) : null;
     })
   }
-
+  
   function listen_task_detail() {
     $task_detail_trigger.on('click', function() {
       var $this = $(this);
@@ -42,9 +47,12 @@
 
   // 查看task详情
   function show_task_detail(index) {
+    // 生成详情模板
     render_task_detail(index);
     current_index = index;
+    // 展示详情模板
     $task_detail.show();
+    // 展示详情模板mask
     $task_detail_mask.show();
   }
 
@@ -54,6 +62,7 @@
     refresh_task_list();
   }
 
+  // 隐藏详情
   function hide_task_detail() {
     $task_detail.hide();
     $task_detail_mask.hide();
@@ -81,11 +90,16 @@
       </div>
     </form>
     `;
+    // 清空Task详情模板，再用新模板替换
     $task_detail.html(null);
     $task_detail.html(tpl);
+    // 选中其中的form元素，因为之后会使用其监听submit事件
     $update_form = $task_detail.find('form');
+    // 选中显示Task内容元素
     $task_detail_content = $update_form.find('.content')
+    // 选中显示Task input内容元素
     $task_detail_content_input = $update_form.find('[name=content]');
+    // 当内容元素显示input，隐藏自己
     $task_detail_content.on('dblclick', function() {
       $task_detail_content_input.show();
       $task_detail_content.hide();
@@ -94,6 +108,7 @@
     $update_form.on('submit', function(e) {
       e.preventDefault();
       var data = {};
+      // 获取表单中个个input的值
       data.content = $(this).find('[name=content]').val();
       data.desc = $(this).find('[name=desc]').val();
       data.remind_date = $(this).find('[name=remind_date]').val();
